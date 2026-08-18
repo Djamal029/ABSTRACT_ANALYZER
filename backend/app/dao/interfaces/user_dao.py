@@ -1,4 +1,6 @@
-from backend.app.domain.models.user import User
+from app.domain.models.user import User
+
+
 # Interface UserDAO : CRUD utilisateurs, authentification.
 class UserDao:
     def __init__(self):
@@ -11,7 +13,7 @@ class UserDao:
         pass
 
     def updatePassword(self, userId: str, newPasswordHash: str):
-            pass
+        pass
 
     def updateProfile(self, userId: str, fullName: str):
         pass

@@ -1,0 +1,400 @@
+---
+title: "Abstract Analyzer"
+subtitle: "Comprendre le projet — les classes, leurs relations, le pourquoi"
+author: "Abstract Analyzer"
+date: last-modified
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: right
+    toc-depth: 3
+    number-sections: true
+    smooth-scroll: true
+    code-block-bg: true
+    include-in-header:
+      - text: |
+          <style>
+          :root {
+            --aa-bg: #f3f4f7;
+            --aa-surface: #ffffff;
+            --aa-surface-2: #eaecf1;
+            --aa-ink: #171a21;
+            --aa-ink-dim: #565c6c;
+            --aa-ink-faint: #848999;
+            --aa-border: #d7dae2;
+            --aa-border-strong: #b9bec9;
+            --aa-accent: #1f6f74;
+            --aa-accent-soft: #e3eeee;
+            --aa-amber: #a8631f;
+            --aa-amber-soft: #f3e7d6;
+            --aa-good: #3f7d4f;
+          }
+          @media (prefers-color-scheme: dark) {
+            :root {
+              --aa-bg: #14161b;
+              --aa-surface: #1b1e25;
+              --aa-surface-2: #22262f;
+              --aa-ink: #eef0f4;
+              --aa-ink-dim: #a4aab8;
+              --aa-ink-faint: #6d7383;
+              --aa-border: #333844;
+              --aa-border-strong: #454b59;
+              --aa-accent: #5fc2c6;
+              --aa-accent-soft: #1c2f30;
+              --aa-amber: #e0a15c;
+              --aa-amber-soft: #33291a;
+              --aa-good: #6fbf82;
+            }
+          }
+
+          @font-face {
+            font-family: "AA Serif Fallback";
+            src: local("Iowan Old Style"), local("Palatino Linotype"), local("Georgia");
+          }
+
+          body {
+            background: var(--aa-bg) !important;
+            color: var(--aa-ink) !important;
+            font-family: "AA Serif Fallback", "Charter", Georgia, "Palatino Linotype", serif !important;
+            font-size: 17px;
+            line-height: 1.65;
+          }
+
+          #title-block-header.quarto-title-block {
+            border-bottom: 1px solid var(--aa-border-strong);
+            padding-bottom: 1.6rem;
+            margin-bottom: 2.4rem;
+          }
+          #title-block-header .title {
+            font-family: "AA Serif Fallback", Georgia, serif !important;
+            font-weight: 700;
+            color: var(--aa-ink) !important;
+            letter-spacing: -0.01em;
+          }
+          #title-block-header .subtitle {
+            font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace !important;
+            font-size: 0.8rem !important;
+            letter-spacing: 0.02em;
+            color: var(--aa-accent) !important;
+            text-transform: none;
+            opacity: 1 !important;
+          }
+          #title-block-header .author, #title-block-header .date {
+            display: none;
+          }
+
+          #quarto-content, #quarto-document-content, main.content {
+            background: var(--aa-bg) !important;
+          }
+
+          h1, h2, h3, h4 {
+            font-family: "AA Serif Fallback", Georgia, serif !important;
+            color: var(--aa-ink) !important;
+            font-weight: 700 !important;
+          }
+          h2 {
+            margin-top: 2.6rem !important;
+            padding-top: 0.4rem;
+            border-top: 1px solid var(--aa-border);
+          }
+          h3 { color: var(--aa-accent) !important; font-size: 1.15rem !important; }
+
+          .header-section-number {
+            color: var(--aa-ink-faint) !important;
+            font-family: ui-monospace, monospace !important;
+            font-weight: 500 !important;
+          }
+
+          p, li { color: var(--aa-ink); max-width: 72ch; }
+
+          a { color: var(--aa-accent) !important; text-decoration-color: var(--aa-border-strong) !important; }
+          a:hover { text-decoration-color: var(--aa-accent) !important; }
+
+          code {
+            font-family: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, Menlo, monospace !important;
+            background: var(--aa-surface-2) !important;
+            color: var(--aa-ink) !important;
+            border: 1px solid var(--aa-border);
+            border-radius: 4px;
+            padding: 0.05em 0.35em;
+            font-size: 0.86em;
+          }
+          pre.sourceCode, div.sourceCode {
+            background: var(--aa-surface) !important;
+            border: 1px solid var(--aa-border) !important;
+            border-radius: 8px !important;
+          }
+          pre.sourceCode code { background: transparent !important; border: none; padding: 0; }
+
+          div.callout {
+            border-radius: 8px !important;
+            border: 1px solid var(--aa-border) !important;
+            background: var(--aa-surface) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+          }
+          div.callout-tip {
+            border-left: 3px solid var(--aa-amber) !important;
+          }
+          div.callout-tip .callout-icon::before { background-color: var(--aa-amber) !important; }
+          div.callout-tip > .callout-header {
+            background: var(--aa-amber-soft) !important;
+            color: var(--aa-amber) !important;
+            font-family: ui-monospace, monospace !important;
+            font-size: 0.8rem !important;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+          }
+          div.callout-note {
+            border-left: 3px solid var(--aa-accent) !important;
+          }
+          div.callout-note .callout-icon::before { background-color: var(--aa-accent) !important; }
+          div.callout-note > .callout-header {
+            background: var(--aa-accent-soft) !important;
+            color: var(--aa-accent) !important;
+            font-family: ui-monospace, monospace !important;
+            font-size: 0.8rem !important;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+          }
+          div.callout-body, div.callout-body-container { color: var(--aa-ink) !important; }
+
+          #TOC, nav.toc-active, .sidebar {
+            font-family: -apple-system, "Segoe UI", system-ui, sans-serif !important;
+          }
+          #TOC .toc-actions, #toc-title {
+            font-family: ui-monospace, monospace !important;
+            font-size: 0.72rem !important;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--aa-ink-faint) !important;
+          }
+          #TOC a, nav.toc-active a {
+            color: var(--aa-ink-dim) !important;
+            font-size: 0.86rem !important;
+            border-left: 2px solid transparent !important;
+          }
+          #TOC a:hover, nav.toc-active a:hover {
+            color: var(--aa-accent) !important;
+          }
+          #TOC a.active, nav.toc-active a.active {
+            color: var(--aa-accent) !important;
+            border-left-color: var(--aa-accent) !important;
+            font-weight: 600;
+          }
+
+          .status-coded {
+            color: var(--aa-good);
+            font-family: ui-monospace, monospace;
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+          }
+          .status-stub {
+            color: var(--aa-ink-faint);
+            font-family: ui-monospace, monospace;
+            font-size: 0.78em;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+          }
+
+          hr { border-color: var(--aa-border) !important; }
+          </style>
+---
+
+Abstract Analyzer est une plateforme de soumission et de tri d'abstracts scientifiques, générique pour
+n'importe quel organisateur de conférence, colloque ou journée thématique. Elle est construite
+single-tenant pour l'instant — la mise en place d'une isolation multi-tenant (plusieurs organisateurs sur
+la même instance) est délibérément reportée à une phase ultérieure. Ce document explique **chaque classe,
+son rôle, ses relations avec les autres, et pourquoi elle est construite ainsi** — pas juste ce qu'elle
+fait, mais le raisonnement derrière.
+
+L'architecture est en couches strictes : Domaine → Interfaces (DAO/Provider) → Implémentations → Services
+→ API/Jobs. Une couche ne parle jamais directement à la couche n-2 (l'API n'appelle jamais un DAO). Chaque
+relation ci-dessous est une dépendance réelle dans le code.
+
+## Le domaine — les entités et pourquoi elles sont reliées ainsi
+
+Le domaine ne contient que des objets Python simples (`__init__` + attributs), sans SQLAlchemy ni FastAPI.
+C'est le vocabulaire métier partagé par toutes les autres couches.
+
+### `Edition` — une occurrence d'événement
+
+`editionId, editionName, editionTheme, themeEmbeddingId, submissionsOpenAt, submissionStartAt, status`
+
+Un organisateur peut créer plusieurs éditions dans le temps (colloque 2025, 2026...), chacune avec son
+propre thème — donc son propre `themeEmbeddingId`, puisque c'est contre ce vecteur que chaque `Abstract`
+sera noté. `status` (`OPEN → CLOSED → CLUSTERED`) encode où en est l'édition dans son cycle de vie ; c'est
+ce champ, pas une requête d'existence de `Cluster`, que le dashboard interroge pour savoir si les axes
+thématiques sont prêts à afficher.
+
+::: {.callout-note}
+## Multi-tenance : délibérément reportée
+Le projet deviendra un SaaS vendu à plusieurs organisateurs, avec une entité `Organization` et un
+`organizationId` filtré partout. Ce choix a été fait, puis délibérément mis de côté pour construire et
+valider d'abord le produit en single-tenant — l'isolation tenant reviendra comme une phase à part entière.
+:::
+
+### `Abstract` — la soumission d'un chercheur
+
+`abstractId, editionId, authorId, abstractTitle, abstractText, keywords, status, relevanceScore, embeddingId, submittedAt`
+
+Relié à `Edition` (`editionId`, many-to-one) et à `User` (`authorId`, many-to-one). Trois choix qui ne sont
+pas évidents au premier regard :
+
+::: {.callout-tip}
+## `abstractTitle` séparé de `abstractText`
+Pas juste pour l'affichage. SPECTER2, le modèle d'embedding, a été entraîné sur le format
+`titre [SEP] résumé` — les mélanger dans un seul champ dégraderait la qualité du vecteur produit, donc du
+score de pertinence et du clustering.
+:::
+
+::: {.callout-tip}
+## `keywords` séparé, mais hors de l'embedding
+Sert à la similarité *lexicale* dans la détection de doublons (comparer des mots-clés est plus net que
+comparer du texte libre) et au filtrage dashboard — mais n'entre jamais dans l'embedding, qui reste
+`titre + texte` uniquement.
+:::
+
+::: {.callout-tip}
+## `embeddingId` plutôt que le vecteur lui-même
+Le domaine ne sait pas où ni comment le vecteur est stocké (Chroma aujourd'hui, pgvector demain) — c'est
+juste une clé vers `VectorStoreDAO`.
+:::
+
+`status` inclut `FLAGGED_DUPLICATE`, un état d'*attention* et non d'exclusion : posé automatiquement par
+`DuplicateDetectionService` quand un doublon potentiel est trouvé, retiré (ou confirmé) seulement par
+décision humaine d'un organisateur. L'abstract reste scoré et classé normalement pendant ce temps.
+
+### `User` — chercheur ou organisateur
+
+`userId, userEmail, userFullName, userRole, passwordHash, isActive, createdAt`
+
+`passwordHash` : jamais le mot de passe en clair, calculé par `core/security.py`.
+
+::: {.callout-tip}
+## `isActive` plutôt qu'un `delete`
+Un `User` est référencé par `Abstract.authorId` et `AuditLog.actorId` — le supprimer casserait soit une
+clé étrangère, soit la traçabilité de qui a soumis/validé quoi. Désactiver préserve l'historique sans
+permettre une nouvelle connexion.
+:::
+
+### `Cluster` — un axe thématique découvert après coup
+
+`clusterId, editionId, clusterName, clusterKeyWords, clusterEmbeddingId, status`
+
+N'existe qu'après le job de clustering post-clôture — many-to-one vers `Edition`, et conceptuellement
+groupe plusieurs `Abstract` (la liste vit dans la base vectorielle/relationnelle selon l'implémentation,
+pas comme une liste d'IDs codée en dur dans l'entité).
+
+### `DuplicateFlag` — une proposition, jamais une décision automatique
+
+`duplicateFlagId, editionId, abstractAID, abstractBID, similarityScore, status`
+
+Référence deux `Abstract`. Son `status` (`PENDING → CONFIRMED/REJECTED`) ne change que par action
+explicite d'un organisateur via l'API — jamais par un service. C'est la traduction directe du principe
+« toujours soumise à validation humaine » énoncé dès la conception du projet.
+
+### `AuditLog` — la trace, y compris des actions que personne n'a demandées
+
+`auditLogId, actorId, action, entityType, entityId, metadata, createdAt`
+
+::: {.callout-tip}
+## `actorId` accepte `None` volontairement
+`ClusteringJob` déclenche `RUN_CLUSTERING` sans qu'aucun humain n'ait cliqué sur rien, et cette action
+doit quand même être traçable. `entityType`/`entityId` sont génériques plutôt que des clés étrangères
+typées vers chaque table, parce qu'un même log peut porter sur un `Abstract`, une `Edition`, un
+`DuplicateFlag`... — une seule table sert tous les cas plutôt qu'une par type d'entité auditée.
+:::
+
+```text
+Edition ──(belongs to)── Abstract ──(authored by)── User
+                                ▲                        ▲
+                                │                        │
+                      Cluster ──┘ (groups)     DuplicateFlag ──┘ (flags 2 abstracts)
+
+AuditLog ──(entityType/entityId)──> n'importe laquelle des entités ci-dessus
+```
+
+## Interfaces DAO/Provider — pourquoi une couche entière juste pour des contrats
+
+Huit interfaces, une par ressource ou par capacité technique : `AbstractDAO`, `EditionDAO`, `UserDAO`,
+`ClusterDAO`, `DuplicateFlagDAO`, `AuditLogDAO` (persistance relationnelle) + `VectorStoreDAO`,
+`EmbeddingProvider` (calcul/stockage vectoriel). Chacune ne décrit que des signatures — aucune requête
+SQL, aucun appel réseau réel dedans.
+
+::: {.callout-note}
+## La raison d'être de cette couche
+Deux migrations étaient déjà connues au moment de la conception : MySQL → PostgreSQL, et ChromaDB →
+pgvector, au déploiement. Si les services appelaient SQLAlchemy ou ChromaDB directement, ces deux
+migrations obligeraient à réécrire chaque service. En passant par une interface, la migration se limite à
+écrire une nouvelle classe qui l'implémente et à changer un point de config (`core/config.py`) — aucun
+service ne change.
+:::
+
+## Implémentations — le choix technique du moment, isolé
+
+`MySQLAbstractDAO` [(codé)]{.status-coded} traduit entre `AbstractModel` (ligne SQL, définie dans
+`sqlalchemy_models.py`) et `Abstract` (objet domaine) via une méthode privée `_toDomain()`. Elle ne fait
+jamais `db.commit()` — seulement `add()`/`flush()` — parce que la transaction est bornée au niveau de la
+requête HTTP entière (voir @sec-api), pas à chaque appel DAO individuel : sans ça, une soumission qui
+enchaîne `create()` puis `updateRelevanceScore()` pourrait persister la première étape et échouer sur la
+seconde, laissant un abstract sans score en base.
+
+Les autres — `EditionDAOImpl`, `UserDAOImpl`, `ClusterDAOImpl`, `PostgresAbstractDAO`, `ChromaVectorStore`,
+`Specter2Provider`... [(stub)]{.status-stub} — sont encore des fichiers à écrire sur ce même patron.
+
+## Services — où vit la vraie logique métier
+
+### Services cœur
+
+Une responsabilité chacun, réutilisés par les orchestrateurs :
+
+- **`EmbeddingService`** — façade sur `EmbeddingProvider` configuré ; personne d'autre n'appelle
+  `Specter2Provider` par son nom.
+- **`RelevanceService`** — cosinus abstract/thème, pur (aucun DAO).
+- **`RankingService`** — lit les scores déjà calculés via `AbstractDAO`, ne recalcule rien à la volée.
+- **`DuplicateDetectionService`** — interroge `VectorStoreDAO.searchSimilar()`, combine avec une
+  similarité lexicale sur `keywords`, écrit via `DuplicateFlagDAO`. Ne modifie jamais `Abstract.status`
+  lui-même au-delà de `FLAGGED_DUPLICATE`.
+- **`ClusteringService`** — délègue à `HyperparamOptimizer` (Optuna, un run par édition car le thème
+  change à chaque fois) puis à `TopicLabeling` pour nommer chaque cluster trouvé.
+- **`AuditLogService`** — écrit un `AuditLog` via `AuditLogDAO`, appelé par tous les orchestrateurs
+  ci-dessous après une action qui change l'état.
+
+### Orchestrateurs
+
+Enchaînent plusieurs services/DAO pour un cas d'usage complet :
+
+::: {.callout-note}
+## `AbstractService.submit()` — le flux le plus long du système
+`AbstractDAO.create()` → `EmbeddingService.embed()` → `VectorStoreDAO.upsert()` →
+`RelevanceService.computeRelevance()` → `AbstractDAO.updateRelevanceScore()` →
+`DuplicateDetectionService.findPotentialDuplicates()` → `AuditLogService.record()`. C'est le service qui
+connaît le plus large éventail de dépendances, parce que la soumission est le seul flux qui traverse tout
+le pipeline vectorisation → scoring → doublons en une seule fois.
+:::
+
+`EditionService` et `UserService` gèrent le cycle de vie de chaque entité racine, chacun couplé à
+`AuditLogService` pour tracer ses actions. `DashboardService` est en lecture seule, agrège `AbstractDAO` +
+`ClusterDAO`, n'écrit jamais rien.
+
+## API & Jobs — comment tout se déclenche {#sec-api}
+
+Chaque endpoint appelle un orchestrateur, jamais un DAO directement (`POST /abstracts` →
+`AbstractService`, `PATCH /duplicates/{id}` → `AbstractService` aussi, côté revue humaine).
+`ClusteringJob`, planifié par `jobs/scheduler.py`, appelle `ClusteringService` + `ClusterDAO` +
+`AuditLogService` une heure après la clôture d'une édition — sans jamais passer par l'API.
+
+::: {.callout-note}
+## La frontière transactionnelle
+Elle vit dans `api/deps.py::get_db()` : une session par requête HTTP, qui commite automatiquement si tout
+s'est bien passé et fait un `rollback()` sinon. C'est ce qui permet à `AbstractService.submit()`
+d'enchaîner cinq appels DAO différents en restant atomique — soit tout est persisté, soit rien ne l'est.
+:::
+
+## Pour aller plus loin
+
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — flux détaillés et tableau « que changer pour migrer X ».
+- [`CLASS_DIAGRAM.md`](CLASS_DIAGRAM.md) et [`class_diagram.html`](class_diagram.html) — la version
+  visuelle de tout ce qui précède, avec le statut réel (codé/stub) de chaque implémentation.

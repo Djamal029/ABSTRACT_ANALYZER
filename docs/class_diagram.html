@@ -7,7 +7,7 @@
     --surface-2: #eaecf1;
     --ink: #171a21;
     --ink-dim: #565c6c;
-    --ink-faint: #8489996;
+    --ink-faint: #848999;
     --border: #d7dae2;
     --border-strong: #b9bec9;
     --accent: #1f6f74;
@@ -15,6 +15,7 @@
     --accent-soft: #e3eeee;
     --amber: #a8631f;
     --amber-soft: #f3e7d6;
+    --good: #3f7d4f;
     --shadow: 0 1px 2px rgba(23, 26, 33, 0.06), 0 8px 24px -12px rgba(23, 26, 33, 0.18);
   }
 
@@ -33,6 +34,7 @@
       --accent-soft: #1c2f30;
       --amber: #e0a15c;
       --amber-soft: #33291a;
+      --good: #6fbf82;
       --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -14px rgba(0, 0, 0, 0.6);
     }
   }
@@ -51,6 +53,7 @@
     --accent-soft: #1c2f30;
     --amber: #e0a15c;
     --amber-soft: #33291a;
+    --good: #6fbf82;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -14px rgba(0, 0, 0, 0.6);
   }
 
@@ -65,10 +68,7 @@
     padding: clamp(20px, 4vw, 56px);
   }
 
-  .page {
-    max-width: 1180px;
-    margin: 0 auto;
-  }
+  .page { max-width: 1320px; margin: 0 auto; }
 
   h1, h2, h3 {
     font-family: "Iowan Old Style", "Palatino Linotype", Georgia, "Charter", serif;
@@ -92,7 +92,6 @@
     border-bottom: 1px solid var(--border-strong);
     margin-bottom: 34px;
   }
-
   .masthead h1 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 600; }
   .masthead .eyebrow {
     display: block;
@@ -103,37 +102,20 @@
     color: var(--accent);
     margin-bottom: 8px;
   }
-  .masthead p.sub {
-    margin: 8px 0 0;
-    color: var(--ink-dim);
-    max-width: 62ch;
-    font-size: 14.5px;
-  }
+  .masthead p.sub { margin: 8px 0 0; color: var(--ink-dim); max-width: 66ch; font-size: 14.5px; }
 
-  .legend {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    font-size: 12.5px;
-    color: var(--ink-dim);
-  }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ink-dim); }
   .legend span { display: inline-flex; align-items: center; gap: 6px; }
   .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
   .swatch.domain { background: var(--ink-faint); }
   .swatch.iface { background: var(--accent); }
   .swatch.impl { background: var(--amber); }
   .swatch.service { border: 1.5px solid var(--ink-dim); background: transparent; }
+  .swatch.api { border: 1.5px dashed var(--ink-dim); background: transparent; }
 
   /* ---------- layer sections ---------- */
-  .layer {
-    margin-bottom: 40px;
-  }
-  .layer-head {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
+  .layer { margin-bottom: 40px; }
+  .layer-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .layer-head .index {
     font-family: ui-monospace, monospace;
     font-size: 12px;
@@ -145,26 +127,18 @@
   .layer-head h2 { font-size: 19px; font-weight: 600; }
   .layer-head .desc { color: var(--ink-dim); font-size: 13px; }
 
-  .row-scroll {
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
+  .row-scroll { overflow-x: auto; padding-bottom: 4px; }
 
   /* ---------- domain row ---------- */
-  .domain-row {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    min-width: max-content;
-  }
+  .domain-row { display: flex; align-items: stretch; gap: 0; min-width: max-content; }
   .rel {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 88px;
+    min-width: 78px;
     color: var(--ink-faint);
-    font-size: 11px;
+    font-size: 10.5px;
     padding: 0 4px;
   }
   .rel .arrow { font-size: 15px; line-height: 1; color: var(--border-strong); }
@@ -176,120 +150,77 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     box-shadow: var(--shadow);
-    min-width: 218px;
+    min-width: 200px;
     overflow: hidden;
   }
-  .card-name {
-    display: block;
-    font-size: 13.5px;
-    font-weight: 700;
-    padding: 10px 14px;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-  }
+  .card-name { display: block; font-size: 13px; font-weight: 700; padding: 9px 13px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
   .card.iface .card-name { color: var(--accent); }
   .card.impl .card-name { color: var(--amber); font-weight: 600; }
-  .card-kind {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    display: block;
-    margin-bottom: 2px;
-  }
-  .card-body {
-    padding: 10px 14px 12px;
-    font-size: 12px;
-    color: var(--ink-dim);
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
+  .card.impl.stub .card-name { color: var(--ink-faint); font-weight: 600; }
+  .impl-status { font-size: 9.5px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; margin-left: 6px; }
+  .impl-status.coded { color: var(--good); }
+  .impl-status.stub { color: var(--ink-faint); }
+  .card-kind { font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); display: block; margin-bottom: 2px; }
+  .card-body { padding: 9px 13px 11px; font-size: 11.5px; color: var(--ink-dim); display: flex; flex-direction: column; gap: 3px; }
   .card-body .m { color: var(--ink); }
 
   /* ---------- interfaces grid ---------- */
-  .iface-grid {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(190px, 1fr));
-    gap: 16px;
-    min-width: max-content;
-  }
-  .iface-stack {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .connector {
-    align-self: center;
-    width: 1.5px;
-    height: 16px;
-    background: var(--border-strong);
-    position: relative;
-  }
+  .iface-grid { display: grid; grid-template-columns: repeat(8, minmax(172px, 1fr)); gap: 14px; min-width: max-content; }
+  .iface-stack { display: flex; flex-direction: column; align-items: stretch; }
+  .connector { align-self: center; width: 1.5px; height: 16px; background: var(--border-strong); position: relative; }
   .connector::after {
     content: "implements";
-    position: absolute;
-    left: 6px;
-    top: -7px;
-    font-size: 9.5px;
-    color: var(--ink-faint);
-    white-space: nowrap;
-    font-family: ui-monospace, monospace;
+    position: absolute; left: 6px; top: -7px;
+    font-size: 9px; color: var(--ink-faint); white-space: nowrap; font-family: ui-monospace, monospace;
   }
-  .impl-stack { display: flex; flex-direction: column; gap: 8px; }
+  .impl-stack { display: flex; flex-direction: column; gap: 7px; }
 
   /* ---------- services ---------- */
-  .service-groups {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-  }
-  @media (max-width: 800px) {
-    .service-groups { grid-template-columns: 1fr; }
-  }
+  .service-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 800px) { .service-groups { grid-template-columns: 1fr; } }
   .service-group h3 {
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ink-faint);
-    font-family: ui-monospace, monospace;
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint);
+    font-family: ui-monospace, monospace; font-weight: 600; margin-bottom: 10px;
   }
   .service-list { display: flex; flex-direction: column; gap: 10px; }
-  .service-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: var(--shadow);
-    padding: 12px 14px;
-  }
-  .service-card .name { font-weight: 700; font-size: 13.5px; }
-  .service-card .job {
-    color: var(--ink-dim);
-    font-size: 12.5px;
-    margin: 4px 0 8px;
-  }
+  .service-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); padding: 11px 14px; }
+  .service-card .name { font-weight: 700; font-size: 13px; }
+  .service-card .job { color: var(--ink-dim); font-size: 12px; margin: 4px 0 8px; }
   .deps { display: flex; flex-wrap: wrap; gap: 6px; }
-  .pill {
-    font-size: 10.5px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: var(--accent-soft);
-    color: var(--accent);
-    border: 1px solid transparent;
-  }
+  .pill { font-size: 10.5px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); border: 1px solid transparent; }
   .pill.provider { background: var(--amber-soft); color: var(--amber); }
+  .pill.svc { background: var(--surface-2); color: var(--ink-dim); border-color: var(--border); }
 
-  footer.note {
-    margin-top: 8px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
+  /* ---------- api & jobs ---------- */
+  .api-flow { display: flex; flex-direction: column; gap: 8px; min-width: max-content; }
+  .api-row { display: flex; align-items: center; gap: 10px; }
+  .endpoint-card {
+    min-width: 168px;
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+  .endpoint-card .path { font-family: ui-monospace, monospace; font-weight: 700; display: block; font-size: 11.5px; }
+  .endpoint-card .verb { color: var(--ink-faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .api-arrow { color: var(--border-strong); font-size: 16px; }
+  .api-target { font-size: 12px; color: var(--ink-dim); }
+  .api-target strong { color: var(--ink); font-family: ui-monospace, monospace; font-weight: 700; }
+
+  .job-note {
+    margin-top: 14px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
     color: var(--ink-dim);
-    font-size: 13px;
     max-width: 78ch;
   }
+  .job-note strong { color: var(--ink); }
+
+  footer.note { margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+  footer.note p { margin: 0; color: var(--ink-dim); font-size: 13px; max-width: 84ch; }
   footer.note strong { color: var(--ink); }
 </style>
 
@@ -298,31 +229,31 @@
     <div>
       <span class="eyebrow">Abstract Analyzer — architecture</span>
       <h1>Diagramme de classes</h1>
-      <p class="sub">Entités de domaine, contrats DAO/Provider, leurs implémentations concrètes, et les services qui les orchestrent — sans jamais dépendre d'une implémentation directement.</p>
+      <p class="sub">Toutes les connexions intra-couche (relations entre entités du domaine, contrat↔implémentation) et inter-couches (service→interface, endpoint→service, job→service) — Domaine → Interfaces/Implémentations → Services → API &amp; Jobs.</p>
     </div>
     <div class="legend">
       <span><i class="swatch domain"></i>Domaine</span>
       <span><i class="swatch iface"></i>Interface</span>
       <span><i class="swatch impl"></i>Implémentation</span>
       <span><i class="swatch service"></i>Service</span>
+      <span><i class="swatch api"></i>API / Job</span>
     </div>
   </div>
 
-  <!-- DOMAIN -->
+  <!-- 1. DOMAIN -->
   <section class="layer">
     <div class="layer-head">
       <span class="index">1</span>
       <h2>Domaine</h2>
-      <span class="desc">— les entités manipulées partout, indépendantes de tout framework</span>
+      <span class="desc">— relations intra-couche entre entités, indépendantes de tout framework</span>
     </div>
     <div class="row-scroll">
       <div class="domain-row">
         <div class="card domain">
           <span class="card-name">Edition</span>
           <div class="card-body">
-            <span class="m">id, name, theme</span>
+            <span class="m">editionId, theme</span>
             <span class="m">themeEmbeddingId</span>
-            <span class="m">submissionOpensAt / ClosesAt</span>
             <span class="m">status</span>
           </div>
         </div>
@@ -330,147 +261,139 @@
         <div class="card domain">
           <span class="card-name">Abstract</span>
           <div class="card-body">
-            <span class="m">id, editionId, authorId</span>
-            <span class="m">title, text</span>
+            <span class="m">abstractId, editionId</span>
+            <span class="m">title, text, keywords</span>
             <span class="m">status, relevanceScore</span>
-            <span class="m">embeddingId, submittedAt</span>
           </div>
         </div>
         <div class="rel"><span class="arrow">→</span><span class="label">authored by</span></div>
         <div class="card domain">
           <span class="card-name">User</span>
           <div class="card-body">
-            <span class="m">id, email</span>
-            <span class="m">fullName</span>
-            <span class="m">role</span>
+            <span class="m">userId, email</span>
+            <span class="m">role, passwordHash</span>
+            <span class="m">isActive</span>
           </div>
         </div>
-        <div class="rel"><span class="arrow">↖</span><span class="label">groups</span></div>
+        <div class="rel"><span class="arrow">↖</span><span class="label">groups abstracts</span></div>
         <div class="card domain">
           <span class="card-name">Cluster</span>
           <div class="card-body">
-            <span class="m">id, editionId</span>
-            <span class="m">label, keywords[]</span>
-            <span class="m">abstractIds[]</span>
+            <span class="m">clusterId, editionId</span>
+            <span class="m">name, keywords[]</span>
           </div>
         </div>
-        <div class="rel"><span class="arrow">↖</span><span class="label">flags pair</span></div>
+        <div class="rel"><span class="arrow">↖</span><span class="label">flags 2 abstracts</span></div>
         <div class="card domain">
           <span class="card-name">DuplicateFlag</span>
           <div class="card-body">
-            <span class="m">abstractIdA, abstractIdB</span>
-            <span class="m">semanticScore, lexicalScore</span>
-            <span class="m">status, reviewedBy</span>
+            <span class="m">abstractAID, abstractBID</span>
+            <span class="m">similarityScore, status</span>
+          </div>
+        </div>
+        <div class="rel"><span class="arrow">↖</span><span class="label">traces any entity</span></div>
+        <div class="card domain">
+          <span class="card-name">AuditLog</span>
+          <div class="card-body">
+            <span class="m">actorId (null=system)</span>
+            <span class="m">action, entityType/Id</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- INTERFACES + IMPLEMENTATIONS -->
+  <!-- 2. INTERFACES + IMPLEMENTATIONS -->
   <section class="layer">
     <div class="layer-head">
       <span class="index">2</span>
       <h2>Interfaces &amp; implémentations</h2>
-      <span class="desc">— chaque contrat a une implémentation active ; en changer n'affecte aucune autre couche</span>
+      <span class="desc">— intra-couche : chaque contrat → sa/ses implémentation(s). État réel du code, pas aspirationnel.</span>
     </div>
     <div class="row-scroll">
       <div class="iface-grid">
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">AbstractDAO</span>
-            <div class="card-body">
-              <span class="m">create(abstract)</span>
-              <span class="m">getById(id)</span>
-              <span class="m">listByEdition(id)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">AbstractDAO</span>
+            <div class="card-body"><span class="m">create, getById</span><span class="m">listByEdition</span><span class="m">updateStatus/Score</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">MySQLAbstractDAO</span></div>
-            <div class="card impl"><span class="card-name">PostgresAbstractDAO</span></div>
+            <div class="card impl"><span class="card-name">MySQLAbstractDAO<span class="impl-status coded">codé</span></span></div>
+            <div class="card impl stub"><span class="card-name">PostgresAbstractDAO<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">VectorStoreDAO</span>
-            <div class="card-body">
-              <span class="m">upsert(id, vec, meta)</span>
-              <span class="m">searchSimilar(vec, k)</span>
-              <span class="m">delete(id)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">EditionDAO</span>
+            <div class="card-body"><span class="m">create, getById</span><span class="m">changeTheme, close</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">ChromaVectorStore</span></div>
-            <div class="card impl"><span class="card-name">PgVectorStore</span></div>
+            <div class="card impl stub"><span class="card-name">EditionDAOImpl<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">EmbeddingProvider</span>
-            <div class="card-body">
-              <span class="m">embed(text)</span>
-              <span class="m">embedBatch(texts)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">UserDAO</span>
+            <div class="card-body"><span class="m">create, getByEmail</span><span class="m">updatePassword</span><span class="m">deactivate</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">Specter2Provider</span></div>
-            <div class="card impl"><span class="card-name">SentenceTransformerProvider</span></div>
-            <div class="card impl"><span class="card-name">OpenAIEmbeddingProvider</span></div>
+            <div class="card impl stub"><span class="card-name">UserDAOImpl<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">EditionDAO</span>
-            <div class="card-body">
-              <span class="m">create(edition)</span>
-              <span class="m">getById(id)</span>
-              <span class="m">close(id)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">ClusterDAO</span>
+            <div class="card-body"><span class="m">saveClusters</span><span class="m">deleteByEdition</span><span class="m">listByEdition</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">EditionDAOImpl</span></div>
+            <div class="card impl stub"><span class="card-name">ClusterDAOImpl<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">UserDAO</span>
-            <div class="card-body">
-              <span class="m">create(user)</span>
-              <span class="m">getByEmail(email)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">DuplicateFlagDAO</span>
+            <div class="card-body"><span class="m">create, getById</span><span class="m">listPendingByEdition</span><span class="m">updateStatus</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">UserDAOImpl</span></div>
+            <div class="card impl stub"><span class="card-name">DuplicateFlagDAOImpl<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
         <div class="iface-stack">
-          <div class="card iface">
-            <span class="card-kind">interface</span>
-            <span class="card-name">ClusterDAO</span>
-            <div class="card-body">
-              <span class="m">saveClusters(edId, [])</span>
-              <span class="m">listByEdition(id)</span>
-            </div>
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">AuditLogDAO</span>
+            <div class="card-body"><span class="m">record(log)</span><span class="m">list()</span></div>
           </div>
           <div class="connector"></div>
           <div class="impl-stack">
-            <div class="card impl"><span class="card-name">ClusterDAOImpl</span></div>
+            <div class="card impl stub"><span class="card-name">AuditLogDAOImpl<span class="impl-status stub">stub</span></span></div>
+          </div>
+        </div>
+
+        <div class="iface-stack">
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">VectorStoreDAO</span>
+            <div class="card-body"><span class="m">upsert(id,vec,meta)</span><span class="m">searchSimilar(vec,k,editionId)</span><span class="m">delete(id)</span></div>
+          </div>
+          <div class="connector"></div>
+          <div class="impl-stack">
+            <div class="card impl stub"><span class="card-name">ChromaVectorStore<span class="impl-status stub">stub</span></span></div>
+            <div class="card impl stub"><span class="card-name">PgVectorStore<span class="impl-status stub">stub</span></span></div>
+          </div>
+        </div>
+
+        <div class="iface-stack">
+          <div class="card iface"><span class="card-kind">interface</span><span class="card-name">EmbeddingProvider</span>
+            <div class="card-body"><span class="m">embed(text)</span><span class="m">embedBatch(texts)</span></div>
+          </div>
+          <div class="connector"></div>
+          <div class="impl-stack">
+            <div class="card impl stub"><span class="card-name">Specter2Provider<span class="impl-status stub">stub</span></span></div>
+            <div class="card impl stub"><span class="card-name">SentenceTransformerProvider<span class="impl-status stub">stub</span></span></div>
+            <div class="card impl stub"><span class="card-name">OpenAIEmbeddingProvider<span class="impl-status stub">stub</span></span></div>
           </div>
         </div>
 
@@ -478,12 +401,12 @@
     </div>
   </section>
 
-  <!-- SERVICES -->
+  <!-- 3. SERVICES -->
   <section class="layer">
     <div class="layer-head">
       <span class="index">3</span>
       <h2>Services</h2>
-      <span class="desc">— dépendent uniquement des interfaces ci-dessus, jamais des implémentations</span>
+      <span class="desc">— inter-couche : chaque pastille est une dépendance vers une interface (couche 2, teal) ou un autre service (gris)</span>
     </div>
 
     <div class="service-groups">
@@ -507,18 +430,23 @@
           </div>
           <div class="service-card">
             <div class="name">DuplicateDetectionService</div>
-            <div class="job">Combine similarité sémantique + lexicale ; ne fusionne jamais seule.</div>
-            <div class="deps"><span class="pill">VectorStoreDAO</span></div>
+            <div class="job">Similarité sémantique + lexicale ; crée des DuplicateFlag, ne fusionne jamais seule.</div>
+            <div class="deps"><span class="pill">VectorStoreDAO</span><span class="pill">DuplicateFlagDAO</span></div>
           </div>
           <div class="service-card">
             <div class="name">ClusteringService</div>
             <div class="job">Pipeline UMAP + HDBSCAN sur les embeddings d'une édition.</div>
-            <div class="deps"><span class="pill">VectorStoreDAO</span><span class="pill">HyperparamOptimizer</span><span class="pill">TopicLabeling</span></div>
+            <div class="deps"><span class="pill">VectorStoreDAO</span><span class="pill svc">HyperparamOptimizer</span><span class="pill svc">TopicLabeling</span></div>
           </div>
           <div class="service-card">
             <div class="name">HyperparamOptimizer</div>
             <div class="job">Recherche bayésienne (Optuna) des hyperparamètres, par édition.</div>
             <div class="deps"><span class="pill">— pur, sans DAO</span></div>
+          </div>
+          <div class="service-card">
+            <div class="name">AuditLogService</div>
+            <div class="job">Écrit une trace après chaque action qui change l'état.</div>
+            <div class="deps"><span class="pill">AuditLogDAO</span></div>
           </div>
         </div>
       </div>
@@ -528,37 +456,84 @@
         <div class="service-list">
           <div class="service-card">
             <div class="name">AbstractService</div>
-            <div class="job">Soumission : persiste, vectorise, score, détecte les doublons.</div>
+            <div class="job">Soumission : persiste, vectorise, score, détecte les doublons, journalise.</div>
             <div class="deps">
-              <span class="pill">AbstractDAO</span><span class="pill">VectorStoreDAO</span>
-              <span class="pill">EmbeddingService</span><span class="pill">RelevanceService</span>
-              <span class="pill">DuplicateDetectionService</span>
+              <span class="pill">AbstractDAO</span><span class="pill">VectorStoreDAO</span><span class="pill">DuplicateFlagDAO</span>
+              <span class="pill svc">EmbeddingService</span><span class="pill svc">RelevanceService</span>
+              <span class="pill svc">DuplicateDetectionService</span><span class="pill svc">AuditLogService</span>
             </div>
           </div>
           <div class="service-card">
             <div class="name">EditionService</div>
             <div class="job">Cycle de vie d'une édition : création, ouverture, clôture.</div>
-            <div class="deps"><span class="pill">EditionDAO</span></div>
+            <div class="deps"><span class="pill">EditionDAO</span><span class="pill svc">AuditLogService</span></div>
+          </div>
+          <div class="service-card">
+            <div class="name">UserService</div>
+            <div class="job">Inscription, login (délègue le hash/JWT à core/security.py), désactivation.</div>
+            <div class="deps"><span class="pill">UserDAO</span><span class="pill svc">AuditLogService</span></div>
           </div>
           <div class="service-card">
             <div class="name">DashboardService</div>
             <div class="job">Agrège stats, distribution des scores, couverture du thème, clusters.</div>
             <div class="deps"><span class="pill">AbstractDAO</span><span class="pill">ClusterDAO</span></div>
           </div>
-          <div class="service-card">
-            <div class="name">ClusteringJob</div>
-            <div class="job">Job planifié : déclenché 1h après clôture d'une édition.</div>
-            <div class="deps"><span class="pill">ClusteringService</span><span class="pill">ClusterDAO</span></div>
-          </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- 4. API & JOBS -->
+  <section class="layer">
+    <div class="layer-head">
+      <span class="index">4</span>
+      <h2>API &amp; Jobs</h2>
+      <span class="desc">— inter-couche : chaque endpoint appelle un orchestrateur, jamais un DAO directement</span>
+    </div>
+    <div class="row-scroll">
+      <div class="api-flow">
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">POST</span><span class="path">/auth/login, /register</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>UserService</strong> (+ core/security.py pour hash &amp; JWT)</span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">POST / GET</span><span class="path">/abstracts</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>AbstractService</strong></span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">PATCH</span><span class="path">/duplicates/{id}</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>AbstractService</strong> (review humaine, via DuplicateFlagDAO)</span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">POST / PATCH</span><span class="path">/editions</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>EditionService</strong></span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">GET</span><span class="path">/editions/{id}/clusters</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>DashboardService</strong></span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">GET</span><span class="path">/editions/{id}/dashboard</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>DashboardService</strong></span>
+        </div>
+        <div class="api-row">
+          <div class="endpoint-card"><span class="verb">scheduler</span><span class="path">ClusteringJob</span></div>
+          <span class="api-arrow">→</span>
+          <span class="api-target">appelle <strong>ClusteringService</strong> + <strong>ClusterDAO</strong> + <strong>AuditLogService</strong>, 1h après clôture</span>
+        </div>
+      </div>
+      <div class="job-note"><strong>api/deps.py — get_db()</strong> : une session SQLAlchemy par requête HTTP. Les DAO ne font que <code>add()</code>/<code>flush()</code>, jamais <code>commit()</code> ; c'est <code>get_db()</code> qui commite si la requête entière réussit et fait <code>rollback()</code> sinon — pour que la chaîne endpoint → orchestrateur → plusieurs DAO reste une seule transaction atomique.</div>
+    </div>
+  </section>
+
   <footer class="note">
-    <strong>Inversion de dépendance :</strong> les services (couche 3) ne référencent que des noms d'interfaces
-    (couche 2, en teal) — jamais <span class="mono">MySQLAbstractDAO</span> ou <span class="mono">Specter2Provider</span>
-    directement. Migrer MySQL→PostgreSQL ou changer de modèle d'embedding se fait en ajoutant une implémentation
-    (couche 2, en ambre) et en changeant un seul point de config — aucune classe de service n'est modifiée.
+    <p><strong>Inversion de dépendance :</strong> les services (couche 3) ne référencent que des noms d'interfaces (couche 2, teal), jamais <span class="mono">MySQLAbstractDAO</span> ou <span class="mono">Specter2Provider</span> directement — changer de base ou de modèle d'embedding se fait en couche 2 uniquement.</p>
+    <p><strong>Statut du code :</strong> seul <span class="mono">MySQLAbstractDAO</span> a une implémentation réelle à ce stade ; les autres cases ambrées sont des fichiers stub (commentaire seul), à écrire sur ce même patron.</p>
   </footer>
 </div>

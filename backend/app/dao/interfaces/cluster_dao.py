@@ -1,5 +1,5 @@
 # Interface ClusterDAO : persistance des resultats de clustering par edition.
-from backend.app.domain.models.cluster import Cluster
+from app.domain.models.cluster import Cluster
 
 
 class ClusterDAO:
