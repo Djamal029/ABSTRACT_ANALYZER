@@ -11,6 +11,7 @@ class Enums:
     class UserRole:
         RESEARCHER = "RESEARCHER"
         ORGANIZER = "ORGANIZER"
+        SUPERUSER = "SUPERUSER"
 
     class EditionStatus:
         OPEN = "OPEN"
