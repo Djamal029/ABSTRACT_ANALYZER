@@ -14,8 +14,8 @@ class Enums:
         SUPERUSER = "SUPERUSER"
 
     class EditionStatus:
-        OPEN = "OPEN"
         CLOSED = "CLOSED"
+        OPEN = "OPEN"
         CLUSTERED = "CLUSTERED"
 
     class AuditAction:
@@ -23,7 +23,9 @@ class Enums:
         UPDATE_ABSTRACT_STATUS = "UPDATE_ABSTRACT_STATUS"
         REVIEW_DUPLICATE = "REVIEW_DUPLICATE"
         OPEN_EDITION = "OPEN_EDITION"
+        CHANGE_EDITION_THEME = "CHANGE_EDITION_THEME"
         CLOSE_EDITION = "CLOSE_EDITION"
         RUN_CLUSTERING = "RUN_CLUSTERING"
         LOGIN = "LOGIN"
         CREATE_USER = "CREATE_USER"
+        DEACTIVATE_USER = "DEACTIVATE_USER"
