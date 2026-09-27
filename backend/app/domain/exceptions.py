@@ -2,6 +2,9 @@
 # them generically and map them to HTTP codes in a single place, without every
 # endpoint needing to know about every exception individually.
 
+from pyclbr import Class
+
+
 class DomainError(Exception):
     # Base class for all domain-level exceptions.
     pass
@@ -35,11 +38,21 @@ class EditionClosed(DomainError):
     pass
 
 
+class DuplicateFlagNotFound(DomainError):
+    # Raised by DuplicateFlagService when DuplicateFlagDAO.getById() finds nothing.
+    def __init__(self, duplicateFlagId: str):
+        super().__init__(f"DuplicateFlag with ID {duplicateFlagId} not found.")
+
+
 class DuplicateAlreadyReviewed(DomainError):
     # Raised if an organizer tries to review a DuplicateFlag whose status
     # is no longer PENDING (prevents silently overwriting an existing
     # decision without leaving a trace in the audit log).
-    pass
+    def __init__(self, duplicateFlagId: str, status: str):
+        super().__init__(
+            f"DuplicateFlag {duplicateFlagId} has already been"
+            f" reviewed (status={status})."
+        )
 
 
 class InvalidCredentials(DomainError):
