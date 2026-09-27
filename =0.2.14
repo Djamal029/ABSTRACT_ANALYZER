@@ -1,0 +1,6 @@
+Collecting bm25s
+  Downloading bm25s-0.3.11-py3-none-any.whl.metadata (29 kB)
+Requirement already satisfied: numpy in c:\users\simal\appdata\local\programs\python\python310\lib\site-packages (from bm25s) (2.2.5)
+Downloading bm25s-0.3.11-py3-none-any.whl (74 kB)
+Installing collected packages: bm25s
+Successfully installed bm25s-0.3.11

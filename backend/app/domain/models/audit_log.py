@@ -9,3 +9,12 @@ class AuditLog:
         self.entityId = entityId
         self.metadata = metadata  # free-form dict, e.g. {"from": "SUBMITTED", "to": "FLAGGED_DUPLICATE"}
         self.createdAt = createdAt
+
+    # Return metadata as a JSON string
+    def getMetadataAsJson(self):
+        import json
+        return json.dumps(self.metadata)
+
+    # Get actor's userId if available, else "SYSTEM" for system/job actions
+    def getActorIdOrSystem(self):
+        return self.actorId if self.actorId is not None else "SYSTEM"

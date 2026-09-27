@@ -42,7 +42,7 @@ class DuplicateFlagDAOImpl(DuplicateFlagDAO):
             .first()
         )
         if row is None:
-            raise DuplicateFlagNotFound(f"DuplicateFlag {duplicateFlagId} not found.")
+            raise DuplicateFlagNotFound(duplicateFlagId)
         return self._toDomain(row)
 
     def listPendingByEdition(self, editionId: str) -> list[DuplicateFlag]:
