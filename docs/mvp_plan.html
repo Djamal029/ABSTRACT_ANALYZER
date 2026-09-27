@@ -1,0 +1,495 @@
+<title>Programme MVP</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f6f6f3;
+    --bg-raised:#ffffff;
+    --ink:#1b2430;
+    --ink-dim:#5b6472;
+    --line:#dcded9;
+    --accent:#2a5c8a;
+    --track-a:#2e8b79;
+    --track-b:#3b5ba5;
+    --track-c:#b5741f;
+    --track-cluster:#6a4f8a;
+    --chip-bg:#eef0ec;
+    --done-line:#3f8f5c;
+    --socle-bg:#eef0ec;
+    --shadow: 0 1px 2px rgba(27,36,48,.06), 0 6px 16px rgba(27,36,48,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#11161d; --bg-raised:#171e27; --ink:#e7e9ea; --ink-dim:#9aa4b1; --line:#2a3340;
+      --accent:#7fb2e0;
+      --track-a:#6bc3ac; --track-b:#7f9adb; --track-c:#e0a552; --track-cluster:#b79bd6;
+      --chip-bg:#1e2630; --done-line:#4fae76; --socle-bg:#1a212b;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#11161d; --bg-raised:#171e27; --ink:#e7e9ea; --ink-dim:#9aa4b1; --line:#2a3340;
+    --accent:#7fb2e0;
+    --track-a:#6bc3ac; --track-b:#7f9adb; --track-c:#e0a552; --track-cluster:#b79bd6;
+    --chip-bg:#1e2630; --done-line:#4fae76; --socle-bg:#1a212b;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans", system-ui, sans-serif;
+    padding-inline:20px; padding-block:28px 60px;
+    max-width:1220px; margin-inline:auto;
+  }
+  h1,h2,h3{font-family:"Source Serif 4", Georgia, serif; text-wrap:balance; margin:0;}
+  code, .mono{font-family:"IBM Plex Mono", ui-monospace, monospace;}
+
+  header.masthead{
+    border-bottom:2px solid var(--ink); padding-bottom:18px; margin-bottom:8px;
+    display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:flex-end;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono", monospace; font-size:.72rem; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--ink-dim); margin-bottom:6px;
+  }
+  header.masthead h1{font-size:clamp(1.6rem, 3vw, 2.3rem); font-weight:700;}
+  .masthead-sub{color:var(--ink-dim); font-size:.92rem; max-width:60ch;}
+  .overall{text-align:right; font-family:"IBM Plex Mono", monospace;}
+  .overall .num{font-size:1.7rem; font-weight:500; color:var(--ink);}
+  .overall .label{font-size:.7rem; color:var(--ink-dim); letter-spacing:.06em; text-transform:uppercase;}
+
+  .scope{
+    display:flex; gap:14px; flex-wrap:wrap; margin:22px 0 26px;
+    padding:14px 16px; background:var(--bg-raised); border:1px solid var(--line);
+    border-radius:8px; box-shadow:var(--shadow);
+  }
+  .scope-block{flex:1 1 260px; min-width:0;}
+  .scope-block h3{font-size:.78rem; text-transform:uppercase; letter-spacing:.07em; font-family:"IBM Plex Sans"; font-weight:600; color:var(--ink-dim); margin-bottom:6px;}
+  .scope-block p{margin:0; font-size:.85rem; color:var(--ink); line-height:1.5;}
+  .scope-block ul{margin:4px 0 0; padding-left:1.1em; font-size:.85rem; line-height:1.55; color:var(--ink);}
+
+  .principle{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--bg-raised); border:1px solid var(--line); border-left:4px solid var(--accent);
+    border-radius:8px; padding:12px 16px; margin-bottom:10px; box-shadow:var(--shadow);
+    font-size:.88rem; line-height:1.55;
+  }
+  .principle b{font-weight:600;}
+
+  .phase-label{
+    font-family:"IBM Plex Mono", monospace; font-size:.74rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-dim); display:flex; align-items:center; gap:10px; margin:30px 0 12px;
+  }
+  .phase-label::after{content:""; flex:1; height:1px; background:var(--line);}
+  .phase-label:first-of-type{margin-top:26px;}
+
+  .board{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:16px; }
+  @media (max-width: 900px){ .board{grid-template-columns:1fr;} }
+
+  .track{
+    background:var(--bg-raised); border:1px solid var(--line); border-radius:10px;
+    box-shadow:var(--shadow); overflow:hidden; display:flex; flex-direction:column;
+  }
+  .track-head{ padding:14px 16px 12px; border-bottom:1px solid var(--line); }
+  .track[data-track="m1"] .track-head{border-top:4px solid var(--track-a);}
+  .track[data-track="m2"] .track-head{border-top:4px solid var(--track-b);}
+  .track[data-track="m3"] .track-head{border-top:4px solid var(--track-c);}
+  .track[data-track="cluster"] .track-head{border-top:4px solid var(--track-cluster);}
+
+  .track-title{display:flex; align-items:baseline; justify-content:space-between; gap:8px;}
+  .track-title h2{font-size:1.05rem;}
+  .track-count{font-family:"IBM Plex Mono", monospace; font-size:.76rem; color:var(--ink-dim); white-space:nowrap;}
+  .track-role{font-size:.78rem; color:var(--ink-dim); margin-top:4px; line-height:1.4;}
+
+  .progress-track{ height:6px; border-radius:4px; background:var(--chip-bg); margin-top:10px; overflow:hidden; }
+  .progress-fill{height:100%; border-radius:4px; transition:width .25s ease;}
+  .track[data-track="m1"] .progress-fill{background:var(--track-a);}
+  .track[data-track="m2"] .progress-fill{background:var(--track-b);}
+  .track[data-track="m3"] .progress-fill{background:var(--track-c);}
+  .track[data-track="cluster"] .progress-fill{background:var(--track-cluster);}
+
+  .layer{padding:10px 14px 2px;}
+  .layer-label{
+    font-family:"IBM Plex Mono", monospace; font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--ink-dim); display:flex; align-items:center; gap:8px; margin:10px 0 6px;
+  }
+  .layer-label::after{content:""; flex:1; height:1px; background:var(--line);}
+  .layer:first-of-type .layer-label{margin-top:2px;}
+
+  .cluster-wrap{
+    background:var(--bg-raised); border:1px solid var(--line); border-radius:10px; box-shadow:var(--shadow);
+    border-top:4px solid var(--track-cluster); overflow:hidden;
+  }
+  .cluster-wrap .track-head{border-top:none;}
+  .cluster-layers{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); }
+  @media (max-width: 900px){ .cluster-layers{grid-template-columns:repeat(2, minmax(0,1fr));} }
+  @media (max-width: 560px){ .cluster-layers{grid-template-columns:1fr;} }
+  .cluster-layers .layer{padding-bottom:14px;}
+
+  ul.tasks{list-style:none; margin:0 0 4px; padding:0; display:flex; flex-direction:column; gap:2px;}
+  ul.tasks.grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:2px 10px;}
+  .task{ display:flex; gap:9px; align-items:flex-start; padding:7px 6px; border-radius:6px; cursor:pointer; }
+  .task:hover{background:var(--chip-bg);}
+  .task input[type="checkbox"]{
+    appearance:none; width:16px; height:16px; min-width:16px; border:1.5px solid var(--ink-dim);
+    border-radius:4px; margin-top:2px; cursor:pointer; position:relative; background:var(--bg-raised);
+  }
+  .task input[type="checkbox"]:checked{background:var(--done-line); border-color:var(--done-line);}
+  .task input[type="checkbox"]:checked::after{
+    content:""; position:absolute; left:4px; top:1px; width:4px; height:7px;
+    border:solid white; border-width:0 2px 2px 0; transform:rotate(40deg);
+  }
+  .task:focus-within{outline:2px solid var(--accent); outline-offset:2px;}
+  .task-body{min-width:0;}
+  .task-title{font-size:.86rem; line-height:1.4;}
+  .task.done .task-title{color:var(--ink-dim); text-decoration:line-through; text-decoration-color:var(--done-line);}
+  .task-path{display:block; font-size:.71rem; color:var(--accent); word-break:break-all; margin-top:2px;}
+  .task.done .task-path{color:var(--ink-dim);}
+  .task-desc{font-size:.75rem; color:var(--ink-dim); margin-top:2px; line-height:1.45;}
+  .bonus-tag{
+    font-family:"IBM Plex Mono", monospace; font-size:.62rem; text-transform:uppercase; letter-spacing:.05em;
+    padding:1px 6px; border-radius:3px; margin-left:6px; background:var(--chip-bg); color:var(--ink-dim);
+  }
+
+  .frontend-wrap{
+    background:transparent; border:1.5px dashed var(--line); border-radius:10px; padding:14px 16px 6px;
+  }
+  .frontend-head{display:flex; justify-content:space-between; align-items:baseline; gap:10px; flex-wrap:wrap;}
+  .frontend-head h2{font-size:1.1rem; color:var(--ink-dim);}
+  .frontend-note{font-size:.82rem; color:var(--ink-dim); margin:4px 0 10px; max-width:70ch;}
+
+  .sync{
+    margin-top:26px; background:var(--bg-raised); border:1px solid var(--line); border-radius:10px;
+    padding:16px 18px; box-shadow:var(--shadow);
+  }
+  .sync h3{font-size:1rem; margin-bottom:10px;}
+  .sync ol{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:6px; font-size:.86rem; line-height:1.5;}
+  .sync b{font-weight:600;}
+
+  footer.status{ margin-top:22px; font-size:.76rem; color:var(--ink-dim); font-family:"IBM Plex Mono", monospace; text-align:center; }
+</style>
+
+<header class="masthead">
+  <div>
+    <div class="eyebrow">Abstract Analyzer — plan de sprint</div>
+    <h1>Programme du MVP</h1>
+    <p class="masthead-sub">Découpage par module métier : chaque personne traverse toutes les couches (domain → dao → service → api) pour son module. Le pipeline de clustering se code à trois. Le frontend ne démarre qu'une fois l'API en place.</p>
+  </div>
+  <div class="overall">
+    <div class="num" id="overall-num">0 / 0</div>
+    <div class="label">tâches faites</div>
+  </div>
+</header>
+
+<div class="scope">
+  <div class="scope-block">
+    <h3>Cible du MVP</h3>
+    <p>Soumission d'abstract avec score de pertinence live, détection de doublons proposée (validation humaine obligatoire), clustering post-clôture, dashboard organisateur, auth chercheur/organisateur. Single-tenant.</p>
+  </div>
+  <div class="scope-block">
+    <h3>Hors scope (volontairement reporté)</h3>
+    <ul>
+      <li>Multi-tenance (<code>organizationId</code>) — décision déjà prise, à reprendre plus tard</li>
+      <li>Optuna / réoptimisation des hyperparamètres UMAP+HDBSCAN — hyperparamètres fixes pour le MVP</li>
+      <li>Scheduler automatique du clustering — déclenchement manuel par l'organisateur</li>
+      <li>Facturation, notifications email, providers d'embedding alternatifs, migration Postgres/pgvector</li>
+    </ul>
+  </div>
+</div>
+
+<div class="principle">
+  <div>🧭</div>
+  <div><b>Logique de répartition :</b> 3 modules métier, un par personne — chacun code sa verticale complète (domain, dao, service, api) plutôt qu'une seule couche. Le module Abstract (Personne 1) expose <code class="mono">EmbeddingService</code>/<code class="mono">VectorStoreDAO</code> comme interfaces ; les modules Edition/Auth (Personne 2) et Doublons/Audit (Personne 3) codent contre ces interfaces avec une valeur factice tant que Personne 1 n'a pas livré le réel, puis branchent — l'architecture en interfaces du projet est faite pour ça. Le <b>pipeline de clustering se fait à trois</b> une fois les modules individuels fonctionnels : il consomme les sorties des trois (embeddings, éditions, doublons) et alimente le dashboard, donc personne n'est mieux placé seul pour le porter. Le <b>frontend attend que l'API soit posée</b> — sa répartition se décidera à ce moment-là.</div>
+</div>
+
+<div class="phase-label">Phase 1 — modules individuels, en parallèle</div>
+<div class="board" id="board"></div>
+
+<div class="phase-label">Phase 2 — pipeline de clustering, à trois</div>
+<div class="cluster-wrap">
+  <div class="track-head">
+    <div class="track-title"><h2>Clustering & dashboard</h2><span class="track-count" id="cluster-count">0/0</span></div>
+    <div class="track-role">UMAP + HDBSCAN (hyperparamètres fixes pour le MVP), étiquetage, dashboard organisateur — démarre une fois les modules de la phase 1 assez avancés pour fournir de vraies données.</div>
+    <div class="progress-track"><div class="progress-fill" id="cluster-fill" style="width:0%"></div></div>
+  </div>
+  <div class="cluster-layers" id="cluster-layers"></div>
+</div>
+
+<div class="phase-label">Phase 3 — frontend, une fois l'API en place</div>
+<div class="frontend-wrap">
+  <div class="frontend-head">
+    <h2>Frontend</h2>
+    <span class="socle-count mono" id="frontend-count" style="font-family:'IBM Plex Mono',monospace; font-size:.78rem; color:var(--ink-dim);">0/0</span>
+  </div>
+  <p class="frontend-note">Ne démarre pas avant que les endpoints des phases 1 et 2 soient stables. La répartition (par écran, ou à nouveau par personne) se décide à ce moment — liste indicative pour l'instant.</p>
+  <ul class="tasks grid" id="frontend-list"></ul>
+</div>
+
+<div class="sync">
+  <h3>Qui fait quoi, et comment ça s'articule</h3>
+  <ol>
+    <li><b>Personne 1 — Module Abstract :</b> le cœur du produit — embedding (SPECTER2 + ChromaDB), pertinence, classement, orchestration de la soumission. Les autres modules dépendent de ses interfaces (<code class="mono">EmbeddingService</code>, <code class="mono">VectorStoreDAO</code>) : à livrer sans traîner en phase 1.</li>
+    <li><b>Personne 2 — Module Edition & Auth :</b> gestion des éditions (thème, fenêtre de soumission), authentification et rôles. Le vecteur du thème d'édition appelle <code class="mono">EmbeddingService</code> — coder contre l'interface avec un vecteur factice en attendant Personne 1.</li>
+    <li><b>Personne 3 — Module Doublons & Audit :</b> détection de doublons (lexicale, indépendante, démarrable tout de suite ; sémantique via <code class="mono">VectorStoreDAO</code>, factice en attendant Personne 1) et journalisation des actions clés des deux autres modules.</li>
+    <li><b>Phase 2 à trois :</b> une fois qu'on a de vrais abstracts avec de vrais embeddings, de vraies éditions et de vrais flags de doublons, le clustering et le dashboard qui les agrège se codent ensemble — personne n'a une vue complète seul à ce stade.</li>
+    <li><b>Phase 3 :</b> le frontend ne démarre qu'une fois l'API stabilisée sur les trois modules + le clustering. Pas de travail frontend en parallèle du backend sur ce projet.</li>
+  </ol>
+</div>
+
+<footer class="status" id="status">Chargement du suivi partagé…</footer>
+
+<script>
+const MODULES = [
+  {
+    id:"m1", name:"Personne 1 · Module Abstract", role:"Cœur du produit : embedding, pertinence, classement, orchestration de la soumission.",
+    layers:[
+      { label:"Domain", tasks:[
+        { id:"m1-d1", title:"Revue du modèle Abstract", path:"backend/app/domain/models/abstract.py", desc:"Déjà posé — vérifier qu'il porte tous les champs dont le service aura besoin." },
+      ]},
+      { label:"DAO", tasks:[
+        { id:"m1-dao1", title:"Finaliser MySQLAbstractDAO", path:"backend/app/dao/relational/mysql_abstract_dao.py", desc:"Déjà en grande partie codé — compléter ce qui manque.", critical:true },
+        { id:"m1-dao2", title:"ChromaVectorStore (VectorStoreDAO)", path:"backend/app/dao/vector/chroma_vector_store.py", desc:"upsert / searchSimilar / delete des embeddings.", critical:true },
+      ]},
+      { label:"Service", tasks:[
+        { id:"m1-s1", title:"Specter2Provider + EmbeddingService", path:"backend/app/services/embedding/{specter2_provider,embedding_service}.py", desc:"Embedding SPECTER2 des abstracts.", critical:true },
+        { id:"m1-s2", title:"RelevanceService", path:"backend/app/services/scoring/relevance_service.py", desc:"Cosinus abstract vs vecteur thème (fourni par Personne 2)." },
+        { id:"m1-s3", title:"RankingService", path:"backend/app/services/scoring/ranking_service.py", desc:"Lit les scores déjà calculés, trie/pagine." },
+        { id:"m1-s4", title:"AbstractService.submit() — orchestration", path:"backend/app/services/abstract_service.py", desc:"Persistance → embedding → vecteur → pertinence → appelle DuplicateDetectionService (interface, Personne 3)." },
+      ]},
+      { label:"API", tasks:[
+        { id:"m1-a1", title:"Schéma Pydantic Abstract", path:"backend/app/schemas/abstract.py", desc:"" },
+        { id:"m1-a2", title:"Endpoints abstracts + ranking", path:"backend/app/api/v1/endpoints/abstracts.py", desc:"POST /abstracts, GET /abstracts/{id}, GET /editions/{id}/ranking." },
+      ]},
+    ],
+  },
+  {
+    id:"m2", name:"Personne 2 · Module Edition & Auth", role:"Éditions (thème, fenêtre de soumission), authentification et rôles.",
+    layers:[
+      { label:"Domain", tasks:[
+        { id:"m2-d1", title:"Revue des modèles Edition et User", path:"backend/app/domain/models/{edition,user}.py", desc:"" },
+      ]},
+      { label:"DAO", tasks:[
+        { id:"m2-dao1", title:"EditionDAOImpl (MySQL)", path:"backend/app/dao/relational/edition_dao_impl.py", desc:"Même patron que MySQLAbstractDAO." },
+        { id:"m2-dao2", title:"UserDAOImpl (MySQL)", path:"backend/app/dao/relational/user_dao_impl.py", desc:"" },
+      ]},
+      { label:"Service", tasks:[
+        { id:"m2-s1", title:"Sécurité : hash mot de passe + JWT", path:"backend/app/core/security.py", desc:"" },
+        { id:"m2-s2", title:"UserService", path:"backend/app/services/user_service.py", desc:"Inscription, authentification, rôles." },
+        { id:"m2-s3", title:"EditionService", path:"backend/app/services/edition_service.py", desc:"Créer/clôturer une édition ; calcule le vecteur du thème via EmbeddingService (interface de Personne 1, factice en attendant)." },
+      ]},
+      { label:"API", tasks:[
+        { id:"m2-a1", title:"Schémas Pydantic Edition + Auth", path:"backend/app/schemas/edition.py", desc:"" },
+        { id:"m2-a2", title:"Endpoints auth + editions", path:"backend/app/api/v1/endpoints/{auth,editions}.py", desc:"register/login, création/clôture d'édition." },
+        { id:"m2-a3", title:"Bootstrap FastAPI", path:"backend/app/main.py", desc:"Instancie l'app, monte api/v1/router, CORS — dès que le premier endpoint est prêt à tester." },
+      ]},
+    ],
+  },
+  {
+    id:"m3", name:"Personne 3 · Module Doublons & Audit", role:"Détection de doublons (jamais automatique) et journalisation des actions clés.",
+    layers:[
+      { label:"Domain", tasks:[
+        { id:"m3-d1", title:"Revue des modèles DuplicateFlag et AuditLog", path:"backend/app/domain/models/{duplicate_flag,audit_log}.py", desc:"" },
+      ]},
+      { label:"DAO", tasks:[
+        { id:"m3-dao1", title:"DuplicateFlagDAOImpl", path:"backend/app/dao/relational/duplicate_flag_dao_impl.py", desc:"" },
+        { id:"m3-dao2", title:"AuditLogDAOImpl", path:"backend/app/dao/relational/audit_log_dao_impl.py", desc:"" },
+      ]},
+      { label:"Service", tasks:[
+        { id:"m3-s1", title:"Similarité lexicale", path:"backend/app/services/duplicate_detection/lexical_similarity.py", desc:"Indépendant, démarrable tout de suite." },
+        { id:"m3-s2", title:"DuplicateDetectionService", path:"backend/app/services/duplicate_detection/duplicate_detection_service.py", desc:"Combine sémantique (VectorStoreDAO, interface de Personne 1) + lexical, seuil de proposition." },
+        { id:"m3-s3", title:"Journalisation AuditLog", path:"", desc:"Appelée par les autres modules sur les actions clés — à coordonner une fois leurs services prêts." },
+      ]},
+      { label:"API", tasks:[
+        { id:"m3-a1", title:"Schéma Pydantic DuplicateFlag", path:"backend/app/schemas/duplicate.py", desc:"Nouveau fichier." },
+        { id:"m3-a2", title:"Endpoint validation des doublons", path:"backend/app/api/v1/endpoints/duplicates.py", desc:"Liste des flags en attente, confirmer/rejeter." },
+      ]},
+    ],
+  },
+];
+
+const CLUSTER = {
+  layers:[
+    { label:"Domain", tasks:[
+      { id:"cl-d1", title:"Revue du modèle Cluster", path:"backend/app/domain/models/cluster.py", desc:"" },
+    ]},
+    { label:"DAO", tasks:[
+      { id:"cl-dao1", title:"ClusterDAOImpl", path:"backend/app/dao/relational/cluster_dao_impl.py", desc:"" },
+    ]},
+    { label:"Service", tasks:[
+      { id:"cl-s1", title:"Hyperparamètres UMAP+HDBSCAN", path:"backend/app/services/clustering/clustering_service.py", desc:"MVP : valeurs fixes, pas d'Optuna — à tester ensemble sur un jeu d'abstracts factices." },
+      { id:"cl-s2", title:"Branchement sur les embeddings réels", path:"", desc:"Une fois les abstracts et leurs vecteurs disponibles (module Abstract)." },
+      { id:"cl-s3", title:"TopicLabeling", path:"backend/app/services/clustering/topic_labeling.py", desc:"Mots-clés représentatifs par cluster." },
+      { id:"cl-s4", title:"Déclenchement manuel du clustering", path:"backend/app/jobs/clustering_job.py", desc:"Bouton organisateur, pas de scheduler automatique pour le MVP." },
+      { id:"cl-s5", title:"DashboardService", path:"backend/app/services/dashboard_service.py", desc:"Agrège Abstract + Edition + Cluster + DuplicateFlag — touche les 3 modules." },
+    ]},
+    { label:"API", tasks:[
+      { id:"cl-a1", title:"Schémas Pydantic Cluster + Dashboard", path:"backend/app/schemas/{cluster,dashboard}.py", desc:"" },
+      { id:"cl-a2", title:"Endpoints clusters + dashboard", path:"backend/app/api/v1/endpoints/{clusters,dashboard}.py", desc:"" },
+      { id:"cl-b1", title:"HyperparamOptimizer (Optuna)", path:"backend/app/services/clustering/hyperparam_optimizer.py", desc:"Post-MVP, si le temps le permet.", bonus:true },
+    ]},
+  ],
+};
+
+const FRONTEND = [
+  { id:"fe-1", title:"Client HTTP + types TS", path:"frontend/src/api/client.ts, types/*.ts", desc:"Générés à partir des schémas Pydantic finaux des 3 modules." },
+  { id:"fe-2", title:"Écran de connexion", path:"", desc:"" },
+  { id:"fe-3", title:"Formulaire de soumission + bandeau doublon", path:"frontend/src/pages/SubmissionForm, components/submission/*.tsx", desc:"" },
+  { id:"fe-4", title:"Classement live", path:"frontend/src/pages/LiveRanking", desc:"" },
+  { id:"fe-5", title:"Dashboard organisateur", path:"frontend/src/pages/OrganizerDashboard", desc:"Stats, clusters, validation des doublons." },
+  { id:"fe-6", title:"Polish, responsive, tests manuels", path:"", desc:"" },
+];
+
+const board = document.getElementById("board");
+const clusterLayersEl = document.getElementById("cluster-layers");
+const frontendList = document.getElementById("frontend-list");
+const state = new Map();
+
+function taskEl(task){
+  const li = document.createElement("li");
+  const isDone = !!state.get(task.id);
+  li.className = "task" + (isDone ? " done" : "");
+  li.innerHTML = `
+    <input type="checkbox" id="chk-${task.id}" ${isDone ? "checked" : ""} aria-label="${task.title}">
+    <div class="task-body">
+      <span class="task-title">${task.title}${task.bonus ? '<span class="bonus-tag">bonus</span>' : ""}</span>
+      ${task.path ? `<code class="task-path">${task.path}</code>` : ""}
+      ${task.desc ? `<div class="task-desc">${task.desc}</div>` : ""}
+    </div>
+  `;
+  li.addEventListener("click", (ev) => {
+    if(ev.target.tagName !== "INPUT"){
+      const cb = li.querySelector("input");
+      cb.checked = !cb.checked;
+      toggle(task.id, cb.checked);
+    }
+  });
+  li.querySelector("input").addEventListener("click", (ev) => ev.stopPropagation());
+  li.querySelector("input").addEventListener("change", (ev) => toggle(task.id, ev.target.checked));
+  return li;
+}
+
+function buildList(el, tasks){
+  el.innerHTML = "";
+  for(const task of tasks) el.appendChild(taskEl(task));
+}
+
+function layerIds(layers){ return layers.flatMap(l => l.tasks.map(t => t.id)); }
+
+function renderLayers(container, layers){
+  container.innerHTML = "";
+  for(const layer of layers){
+    const layerEl = document.createElement("div");
+    layerEl.className = "layer";
+    const label = document.createElement("div");
+    label.className = "layer-label";
+    label.textContent = layer.label;
+    layerEl.appendChild(label);
+    const ul = document.createElement("ul");
+    ul.className = "tasks";
+    for(const task of layer.tasks) ul.appendChild(taskEl(task));
+    layerEl.appendChild(ul);
+    container.appendChild(layerEl);
+  }
+}
+
+function render(){
+  board.innerHTML = "";
+  let totalDone = 0, totalAll = 0;
+
+  for(const mod of MODULES){
+    const ids = layerIds(mod.layers);
+    const done = ids.filter(id => state.get(id)).length;
+    totalDone += done; totalAll += ids.length;
+
+    const el = document.createElement("div");
+    el.className = "track";
+    el.dataset.track = mod.id;
+    const pct = ids.length ? Math.round((done/ids.length)*100) : 0;
+    el.innerHTML = `
+      <div class="track-head">
+        <div class="track-title"><h2>${mod.name}</h2><span class="track-count">${done}/${ids.length}</span></div>
+        <div class="track-role">${mod.role}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+    `;
+    const layersWrap = document.createElement("div");
+    renderLayers(layersWrap, mod.layers);
+    el.appendChild(layersWrap);
+    board.appendChild(el);
+  }
+
+  const clusterIds = layerIds(CLUSTER.layers);
+  const clusterDone = clusterIds.filter(id => state.get(id)).length;
+  totalDone += clusterDone; totalAll += clusterIds.length;
+  document.getElementById("cluster-count").textContent = `${clusterDone}/${clusterIds.length}`;
+  document.getElementById("cluster-fill").style.width = (clusterIds.length ? Math.round((clusterDone/clusterIds.length)*100) : 0) + "%";
+  renderLayers(clusterLayersEl, CLUSTER.layers);
+
+  buildList(frontendList, FRONTEND);
+  const feDone = FRONTEND.filter(t => state.get(t.id)).length;
+  totalDone += feDone; totalAll += FRONTEND.length;
+  document.getElementById("frontend-count").textContent = `${feDone}/${FRONTEND.length}`;
+
+  document.getElementById("overall-num").textContent = `${totalDone} / ${totalAll}`;
+}
+
+const LOCAL_KEY = "abstract-analyzer-mvp-plan";
+
+function loadLocal(){
+  try{
+    const raw = localStorage.getItem(LOCAL_KEY);
+    if(!raw) return;
+    const obj = JSON.parse(raw);
+    for(const [id, val] of Object.entries(obj)) state.set(id, !!val);
+  }catch(e){ /* private mode / storage blocked — start empty, still fully usable */ }
+}
+
+function saveLocal(){
+  try{
+    const obj = {};
+    for(const [id, val] of state.entries()) obj[id] = val;
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(obj));
+  }catch(e){ /* ignore — nothing to persist to, page still works this session */ }
+}
+
+function toggle(id, val){
+  state.set(id, val);
+  render();
+  saveLocal();
+  if(dbRef){
+    dbRef.collection("tasks").doc(id).set({ done: val, at: new Date().toISOString() }).catch(() => {});
+  }
+}
+
+let dbRef = null;
+loadLocal();
+render();
+
+(async () => {
+  const statusEl = document.getElementById("status");
+  if(typeof claude === "undefined" || !claude || typeof claude.use !== "function"){
+    statusEl.textContent = "Page autonome — la progression est sauvegardée dans ce navigateur (pas de partage d'équipe ici).";
+    return;
+  }
+  try{
+    const db = await claude.use("db");
+    if(!db){
+      statusEl.textContent = "Suivi partagé indisponible ici — la progression reste sauvegardée dans ce navigateur.";
+      return;
+    }
+    dbRef = db;
+    db.collection("tasks").onSnapshot((snap) => {
+      for(const doc of snap.docs){
+        state.set(doc.id, !!(doc.data() || {}).done);
+      }
+      render();
+      saveLocal();
+      statusEl.textContent = "Suivi partagé actif — coché par toute l'équipe, en direct.";
+    }, () => {
+      statusEl.textContent = "Suivi partagé interrompu — la progression reste sauvegardée dans ce navigateur.";
+    });
+  }catch(e){
+    statusEl.textContent = "Suivi partagé indisponible ici — la progression reste sauvegardée dans ce navigateur.";
+  }
+})();
+</script>

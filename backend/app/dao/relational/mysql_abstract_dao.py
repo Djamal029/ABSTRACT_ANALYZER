@@ -10,7 +10,8 @@
 from app.dao.interfaces.abstract_dao import AbstractDAO
 from app.dao.relational.sqlalchemy_models import AbstractModel
 from app.domain.models.abstract import Abstract
-from app.domain.exceptions import AbstractNotFound
+from app.domain.enums import Enums
+from app.domain.exceptions import AbstractNotFound, AbstractWithdrawn
 
 
 class MySQLAbstractDAO(AbstractDAO):
@@ -41,8 +42,22 @@ class MySQLAbstractDAO(AbstractDAO):
         return self._toDomain(row)
 
     def listByEdition(self, editionId: str) -> list[Abstract]:
+        rows = (
+            self.db.query(AbstractModel)
+            .filter_by(editionId=editionId)
+            .filter(AbstractModel.status != Enums.AbstractStatus.WITHDRAWN)
+            .all()
+        )
+        return [self._toDomain(row) for row in rows]
+
+    def listAllByEdition(self, editionId: str) -> list[Abstract]:
+        """Return all abstracts for historical and administrative views."""
         rows = self.db.query(AbstractModel).filter_by(editionId=editionId).all()
         return [self._toDomain(row) for row in rows]
+
+    def withdraw(self, abstractId: str) -> None:
+        """Mark an abstract withdrawn without deleting its history or vector."""
+        self.updateStatus(abstractId, Enums.AbstractStatus.WITHDRAWN)
 
     def updateStatus(self, abstractId: str, status: str):
         row = self.db.query(AbstractModel).filter_by(abstractId=abstractId).first()
@@ -55,6 +70,8 @@ class MySQLAbstractDAO(AbstractDAO):
         row = self.db.query(AbstractModel).filter_by(abstractId=abstractId).first()
         if row is None:
             raise AbstractNotFound(abstractId)
+        if row.status == Enums.AbstractStatus.WITHDRAWN:
+            raise AbstractWithdrawn(abstractId)
         row.relevanceScore = relevanceScore
         self.db.flush()
 

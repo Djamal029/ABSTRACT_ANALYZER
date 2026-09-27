@@ -9,7 +9,9 @@ class VectorStoreDao:
     def searchSimilar(self, vec, k, editionId):
         # editionId restricts the search to vectors upserted with that
         # editionId in meta, so a duplicate/relevance search never matches
-        # an abstract from a different edition.
+        # an abstract from a different edition. Callers must also validate
+        # returned IDs against active relational records: vectors are retained
+        # when an abstract is withdrawn, to preserve historical calculations.
         pass
 
     def delete(self, id_):
