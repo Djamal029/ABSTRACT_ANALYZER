@@ -16,7 +16,6 @@ class LexicalSimilarity:
     def __init__(self, abstract_a: Abstract, abstract_b: Abstract):
         self.abstract_a = abstract_a
         self.abstract_b = abstract_b
-        self.similarity_score = None  # Will be computed when needed
 
     # Find all alphanumeric tokens in the text, ignoring punctuation and case.
     # The < \w > metacharacter matches word characters : A word character is a character a-z, A-Z, 0-9, including _ (underscore).
@@ -35,23 +34,28 @@ class LexicalSimilarity:
         )
 
     # Compute the similarity score between two texts using the BM25 algorithm.
-    def similarity_score(self, query: str, document: str) -> float:
-        query_tokens = self._tokens(query)
-        corpus_tokens = [self._tokens(document)]
+    def _score(self, first: str, second: str) -> float:
+        corpus_tokens = [self._tokens(first), self._tokens(second)]
         retriever = bm25s.BM25(
             k1=1.5,  # Default value for k1 is 1.5, which controls the term frequency saturation.
             b=0.75  # Default value for b is 0.75, which controls the length normalization of documents.
         )
         retriever.index(corpus_tokens)
-        scores = retriever.get_scores(query_tokens)
-        raw_score = float(scores[0])
 
-        # Normalize the score to [0, 1] range using a simple transformation.
-        return raw_score / (raw_score + 1.0) if raw_score > 0 else 0.0
+        # Compute the BM25 scores for each document in the corpus against the other document.
+        first_scores = retriever.get_scores(self._tokens(first))  # two scores are returned, one for each document in the corpus but we only need the score for the second document, which is at index 1.
+        second_scores = retriever.get_scores(self._tokens(second))
+
+        first_score = max(float(first_scores[1]), 0.0)
+        second_score = max(float(second_scores[0]), 0.0)
+
+        # Normalize the score to a range of [0, 1] using the formula : 2 * min(first_score, second_score) / (first_score + second_score)
+        denominator = first_score + second_score
+        return 2 * min(first_score, second_score) / denominator if denominator else 0.0
 
     def abstract_similarity(self) -> float:
         """Return the lexical similarity between the two abstracts in [0, 1]."""
-        return self.similarity_score(
+        return self._score(
             self._document(self.abstract_a),
             self._document(self.abstract_b),
         )
@@ -59,8 +63,8 @@ class LexicalSimilarity:
     def theme_similarity(self, theme: str, choice: int) -> float:
         """Return the lexical similarity between abstract that we choose and an edition theme."""
         if choice == 1:
-            return self.similarity_score(self._document(self.abstract_a), theme)
+            return self._score(self._document(self.abstract_a), theme)
         elif choice == 2:
-            return self.similarity_score(self._document(self.abstract_b), theme)
+            return self._score(self._document(self.abstract_b), theme)
         else:
             raise ValueError("Choice must be 1 or 2.")
