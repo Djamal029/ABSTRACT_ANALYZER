@@ -12,7 +12,16 @@ class AbstractDAO:
     def getById(self, abstractId: str) -> Abstract:
         pass
 
+    # Operational listing: withdrawn abstracts are retained for history but
+    # excluded from new calculations and active views.
     def listByEdition(self, editionId: str) -> list[Abstract]:
+        pass
+
+    # Historical listing, including withdrawn abstracts.
+    def listAllByEdition(self, editionId: str) -> list[Abstract]:
+        pass
+
+    def withdraw(self, abstractId: str) -> None:
         pass
 
     def updateStatus(self, abstractId: str, status: str):

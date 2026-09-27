@@ -12,6 +12,11 @@ class AbstractNotFound(DomainError):
     pass
 
 
+class AbstractWithdrawn(DomainError):
+    # Raised when a new calculation is attempted for a withdrawn abstract.
+    pass
+
+
 class EditionNotFound(DomainError):
     # Raised by EditionService when EditionDAO.getById() finds nothing.
     pass
